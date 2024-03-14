@@ -5,7 +5,6 @@ const Service = require("../models/Service.model");
 const { isAuthenticated } = require("../middleware/jwt.middleware");
 const fileUploader = require("../config/cloudinary.config");
 
-
 router.post("/upload", fileUploader.single("picture"), (req, res, next) => {
    
     if (!req.file) {
@@ -15,7 +14,7 @@ router.post("/upload", fileUploader.single("picture"), (req, res, next) => {
       res.json({ picture: req.file.path });
 });
      
-router.post("/services", isAuthenticated, (req, res, next) => {
+router.post("/services", isAuthenticated, fileUploader.single("picture"), (req, res, next) => {
   const {picture, speciality, place, description, pricePerPerson, availability } = req.body;
 
   const newService = {
@@ -27,6 +26,8 @@ router.post("/services", isAuthenticated, (req, res, next) => {
     availability: availability,
     owner: req.payload._id,
   }
+
+  console.log(picture)
 
   Service.create(newService)
     .then(response => {
@@ -88,7 +89,6 @@ router.put('/services/:serviceId', fileUploader.single("picture"), (req, res, ne
         res.status(400).json({message: 'Specified id is not valid'})
     };
 
-
     const newService = {
         speciality: req.body.speciality,
         place: req.body.place,
@@ -125,7 +125,7 @@ router.delete('/services/:serviceId', (req, res, next) => {
         return;
     }
 
-    Service.findByIdAndRemove(serviceId)
+    Service.findByIdAndDelete(serviceId)
         .then(deleteService => res.json({message: `Service with id ${serviceId} was removed successfully.`}))
         .catch(err => {
             console.log('failed to delete', err);

@@ -22,7 +22,6 @@ app.use("/api", require("./routes/reservation.routes"));
 app.use("/api", require("./routes/review.routes"));
 app.use("/api" , require("./routes/profil.routes"));
 app.use("/api", require("./routes/message.routes"));
-app.use("/stripe", require("./routes/stripe.routes"));
 
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require("./error-handling")(app);

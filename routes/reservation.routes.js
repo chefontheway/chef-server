@@ -53,17 +53,20 @@ router.post("/services/:serviceId/reserve", isAuthenticated, (req, res, next) =>
                 currency: 'eur',
                 product_data: {
                   name: 'Chef Service',
+                  description: `Reservation for ${totalPerson} people`, // Include a description
                 },
                 unit_amount: savedReservation.totalPrice * 100, // Convert to cents
               },
               quantity: 1,
             }],
             mode: 'payment',
-            success_url: `${process.env.ORIGIN}/checkout-success?reservationId=${savedReservation._id}`,
+            success_url: `${process.env.ORIGIN}/reservations`,
             cancel_url: `${process.env.ORIGIN}/services`,
           })
           .then(session => {
             // Prepare email content
+            console.log(session, "session Stripe")
+
             const ownerEmail = service.owner.email;
             const userEmail = req.payload.email;
             const html = `
@@ -283,7 +286,7 @@ router.delete("/reservations/:reservationId", isAuthenticated, (req, res, next) 
     return;
   }
 
-  Reservation.findByIdAndRemove(reservationId)
+  Reservation.findByIdAndDelete(reservationId)
     .then(deletedReservation => {
       if (!deletedReservation) {
         res.status(404).json({ message: "Reservation not found" });
