@@ -60,7 +60,7 @@ router.post("/services/:serviceId/reserve", isAuthenticated, (req, res, next) =>
               quantity: 1,
             }],
             mode: 'payment',
-            success_url: `${process.env.ORIGIN}/reservations`,
+            success_url: `${process.env.ORIGIN}/confirmation`,
             cancel_url: `${process.env.ORIGIN}/services`,
           })
           .then(session => {
