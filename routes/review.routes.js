@@ -105,7 +105,7 @@ router.delete('/reviews/:reviewId', (req, res, next) => {
       return;
   }
 
-  ReviewModel.findByIdAndRemove(reviewId)
+  ReviewModel.findByIdAndDelete(reviewId)
       .then(() => res.json({ message: `Project with id ${reviewId} & all associated tasks were removed successfully.` }))
       .catch(err => {
           console.log("error deleting project", err);
